@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Activity</title>
+    <style>
+        :root {
+            --primary-color: #4285f4;
+            --secondary-color: #f1f3f4;
+            --border-color: #dadce0;
+            --text-color: #202124;
+            --error-color: #d93025;
+        }
+        
+        body {
+            font-family: 'Google Sans', 'Segoe UI', Roboto, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: var(--secondary-color);
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 700px;
+            margin: 0 auto;
+        }
+        
+        h1 {
+            color: var(--text-color);
+            margin-bottom: 1.5rem;
+            font-weight: 500;
+        }
+        
+        .card {
+            background-color: white;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 1px 2px 0 rgba(60,64,67,0.3), 0 2px 6px 2px rgba(60,64,67,0.15);
+        }
+        
+        .form-group {
+            margin-bottom: 1.25rem;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+        
+        .required:after {
+            content: " *";
+            color: var(--error-color);
+        }
+        
+        input, select, textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            font-size: 1rem;
+            transition: border 0.3s;
+        }
+        
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 2px rgba(66,133,244,0.2);
+        }
+        
+        textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+        
+        .file-input {
+            padding: 0.5rem;
+        }
+        
+        .form-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 2rem;
+        }
+        
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 4px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+        }
+        
+        .btn-primary:hover {
+            background-color: #3367d6;
+        }
+        
+        .btn-secondary {
+            color: var(--primary-color);
+            background: none;
+            border: 1px solid var(--border-color);
+        }
+        
+        .btn-secondary:hover {
+            background-color: rgba(66,133,244,0.04);
+        }
+        
+        .file-info {
+            font-size: 0.875rem;
+            color: #5f6368;
+            margin-top: 0.5rem;
+        }
+        
+        .field-info {
+            font-size: 0.8rem;
+            color: #666;
+            margin-top: 0.25rem;
+            font-style: italic;
+        }
+        
+        .error-message {
+            color: var(--error-color);
+            font-size: 0.875rem;
+            margin-top: 0.25rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Add New Activity</h1>
+        
+        <div class="card">
+            <form method="POST" enctype="multipart/form-data" id="activityForm">
+                <div class="form-group">
+                    <label for="priority" class="required">Priority</label>
+                    <input type="text" id="priority" name="priority" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="project" class="required">Project</label>
+                    <input type="text" id="project" name="project" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="line" class="required">Line</label>
+                    <input type="text" id="line" name="line" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="description" class="required">Activity Description</label>
+                    <textarea id="description" name="description" required></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="start_date" class="required">Start Date</label>
+                    <input type="date" id="start_date" name="start_date" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="complete_date">Complete Date</label>
+                    <input type="date" id="complete_date" name="complete_date">
+                    <div class="field-info">Optional - leave blank if not completed</div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="status" class="required">Status</label>
+                    <select id="status" name="status" required>
+                        <option value="">Select Status</option>
+                        <option value="Open">Open</option>
+                        <option value="In Progress">In Progress</option>
+                        <option value="Completed">Completed</option>
+                        <option value="On Hold">On Hold</option>
+                        <option value="Cancelled">Cancelled</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="attachment">Attachment</label>
+                    <input type="file" id="attachment" name="attachment" class="file-input" accept=".pdf,.png,.jpg,.jpeg">
+                    <div class="file-info">Allowed file types: PDF, PNG, JPG, JPEG (Max 5MB)</div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="remarks">Remarks</label>
+                    <textarea id="remarks" name="remarks"></textarea>
+                </div>
+                
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">Save Activity</button>
+                    <a href="{{ url_for('index') }}" class="btn btn-secondary">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('activityForm').addEventListener('submit', function(e) {
+            const startDate = new Date(document.getElementById('start_date').value);
+            const completeDateInput = document.getElementById('complete_date');
+            
+            if (completeDateInput.value) {
+                const completeDate = new Date(completeDateInput.value);
+                if (completeDate < startDate) {
+                    alert('Complete date cannot be before start date');
+                    e.preventDefault();
+                    return false;
+                }
+            }
+            
+            const fileInput = document.getElementById('attachment');
+            if (fileInput.files.length > 0) {
+                const file = fileInput.files[0];
+                const validTypes = ['application/pdf', 'image/png', 'image/jpeg', 'image/jpg'];
+                const maxSize = 5 * 1024 * 1024; // 5MB
+                
+                if (!validTypes.includes(file.type)) {
+                    alert('Only PDF, PNG, JPG files are allowed');
+                    e.preventDefault();
+                    return false;
+                }
+                
+                if (file.size > maxSize) {
+                    alert('File size exceeds 5MB limit');
+                    e.preventDefault();
+                    return false;
+                }
+            }
+            
+            return true;
+        });
+    </script>
+</body>
+</html>
