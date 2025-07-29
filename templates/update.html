@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Update Activity</title>
+    <style>
+        :root {
+            --primary-color: #4285f4;
+            --secondary-color: #f1f3f4;
+            --border-color: #dadce0;
+            --text-color: #202124;
+        }
+        
+        body {
+            font-family: 'Google Sans', 'Segoe UI', Roboto, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: var(--secondary-color);
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 700px;
+            margin: 0 auto;
+        }
+        
+        h1 {
+            color: var(--text-color);
+            margin-bottom: 1.5rem;
+            font-weight: 500;
+        }
+        
+        .card {
+            background-color: white;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 1px 2px 0 rgba(60,64,67,0.3), 0 2px 6px 2px rgba(60,64,67,0.15);
+        }
+        
+        .form-group {
+            margin-bottom: 1.25rem;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+        
+        textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            font-size: 1rem;
+            min-height: 100px;
+            resize: vertical;
+        }
+        
+        .file-input {
+            padding: 0.5rem;
+        }
+        
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 4px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+        }
+        
+        .btn-primary:hover {
+            background-color: #3367d6;
+        }
+        
+        .logs-container {
+            margin-top: 2rem;
+        }
+        
+        .log-entry {
+            padding: 1rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .log-timestamp {
+            font-weight: bold;
+            color: #5f6368;
+        }
+        
+        .log-file {
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+        
+        .log-file:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Update Activity #{{ sno }}</h1>
+        
+        <div class="card">
+            <form method="POST" enctype="multipart/form-data">
+                <div class="form-group">
+                    <label for="update_details">Update Details</label>
+                    <textarea id="update_details" name="update_details" required></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="update_file">Attach File (Optional)</label>
+                    <input type="file" id="update_file" name="update_file" class="file-input" accept=".pdf,.png,.jpg,.jpeg">
+                </div>
+                
+                <button type="submit" class="btn btn-primary">Save Update</button>
+            </form>
+        </div>
+        
+        <div class="logs-container">
+            <h2>Activity Logs</h2>
+            <div id="logsList">
+                <!-- Logs will be loaded here via JavaScript -->
+                Loading activity logs...
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Load logs when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            fetch(`/view_logs/{{ sno }}`)
+                .then(response => response.json())
+                .then(logs => {
+                    const logsContainer = document.getElementById('logsList');
+                    if (logs.length === 0) {
+                        logsContainer.innerHTML = '<p>No activity logs found</p>';
+                        return;
+                    }
+                    
+                    let html = '';
+                    logs.reverse().forEach(log => {
+                        html += `
+                            <div class="log-entry">
+                                <div class="log-timestamp">${log.timestamp}</div>
+                                <div><strong>${log.action}</strong>: ${log.details}</div>
+                                ${log.file ? `<div>File: <a href="/uploads/${log.file}" class="log-file" target="_blank">${log.file.split('_').pop()}</a></div>` : ''}
+                            </div>
+                        `;
+                    });
+                    logsContainer.innerHTML = html;
+                })
+                .catch(error => {
+                    console.error('Error loading logs:', error);
+                    document.getElementById('logsList').innerHTML = 'Error loading activity logs';
+                });
+        });
+    </script>
+</body>
+</html>
